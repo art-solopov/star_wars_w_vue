@@ -13,9 +13,11 @@ export default new Router({
       component: Root
     },
     {
-      path: '/characters',
+      path: '/characters/page/:page?',
       name: 'Characters',
-      component: Characters
+      component: Characters,
+      alias: '/characters',
+      props: true
     }
   ]
 })

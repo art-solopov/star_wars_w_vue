@@ -20,20 +20,31 @@ export default {
 </style>
 
 <style lang="less">
+ @import "assets/_colors.less";
+ @import "assets/utils.less";
+ 
  #app {
      -webkit-font-smoothing: antialiased;
      -moz-osx-font-smoothing: grayscale;
-     color: #2c3e50;
+     color: @blk;
      
      width: 100%;
      max-width: 900px;
      margin: 0 auto;
-     padding: .5em;
 
-     header {
+     > header {
+         background: @blk;
+         color: yellow;
+         padding: .5em;
+         
 	 h1 {
-	     margin: 0 0 .5em;
+	     margin: 0;
+             text-transform: uppercase;
 	 }
      }
-}
+
+     > main {
+         padding: 1.5em 1em;
+     }
+ }
 </style>
