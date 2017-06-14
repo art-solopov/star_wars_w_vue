@@ -1,8 +1,12 @@
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <router-view></router-view>
-  </div>
+    <div id="app">
+	<header>
+	    <h1>Star Wars with Vue</h1>
+	</header>
+	<main>
+	    <router-view></router-view>
+	</main>
+    </div>
 </template>
 
 <script>
@@ -12,12 +16,24 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+ @import "~normalize.css"
+</style>
+
+<style lang="less">
+ #app {
+     -webkit-font-smoothing: antialiased;
+     -moz-osx-font-smoothing: grayscale;
+     color: #2c3e50;
+     
+     width: 100%;
+     max-width: 900px;
+     margin: 0 auto;
+     padding: .5em;
+
+     header {
+	 h1 {
+	     margin: 0 0 .5em;
+	 }
+     }
 }
 </style>
