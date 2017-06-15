@@ -7,11 +7,15 @@
                     <a href="#" @click.stop.prevent="toggleCurrentCharacter(character.url)">{{ character.name }}</a>
                     <template v-if="currentCharId === character.url">
                         <hr />
-                        <dl>
-                            <dl>Birth year</dl>
+                        <dl class="character-traits">
+                            <dt>Birth year</dt>
                             <dd>{{ character.birth_year }}</dd>
-                            <dl>Gender</dl>
+                            <dt>Gender</dt>
                             <dd>{{ character.gender }}</dd>
+                            <dt>Homeworld</dt>
+                            <dd>{{ character.homeworldName }}</dd>
+                            <dt>Species</dt>
+                            <dd>{{ character.speciesName }}</dd>
                         </dl>
                     </template>
                 </li>
@@ -26,7 +30,7 @@
 </template>
 
 <script>
-  import axios from 'axios'
+  import { fetchCachedData } from '../utils'
 
   export default {
     name: 'Characters',
@@ -53,24 +57,63 @@
         }
 
         let page = Number(this.page || 1)
-        axios.get(
-          'http://swapi.co/api/people/',
-          {params: {page}}
-        ).then(res => {
-          let data = res.data
+
+        fetchCachedData(
+          'http://swapi.co/api/people/', {page}
+        ).then(data => {
           this.next = data.next ? page + 1 : null
           this.prev = data.previous ? page - 1 : null
-          this.characters = res.data.results
+          this.characters = data.results
           this.loading = false
         })
       },
-      toggleCurrentCharacter (id) {
-        if (this.currentCharId === id) {
+      toggleCurrentCharacter (url) {
+        if (this.currentCharId === url) {
           this.currentCharId = null
         } else {
-          this.currentCharId = id
+          // Fetching the additional info
+          let currentCharacter = this.characters.find(e => e.url === url)
+          let promises = []
+          if (currentCharacter.homeworld) {
+            promises.push(
+              fetchCachedData(currentCharacter.homeworld).then(data => {
+                currentCharacter.homeworldName = data.name
+              })
+            )
+          }
+          if (currentCharacter.species.length) {
+            promises.push(
+              fetchCachedData(currentCharacter.species[0]).then(data => {
+                currentCharacter.speciesName = `${data.name} [${data.classification}/${data.designation}]`
+              })
+            )
+          }
+          Promise.all(promises).then(() => { this.currentCharId = url })
         }
       }
     }
   }
 </script>
+
+<style lang="less" scoped>
+ .character-traits {
+     padding: .5em;
+
+     dt {
+         font-weight: bold;
+     }
+
+     dd {
+         margin-left: .5em;
+     }
+     
+     dd, dt {
+         display: inline;
+     }
+
+     dd + dt::before {
+         content: '\000A';
+         white-space: pre;
+     }
+ }
+</style>
