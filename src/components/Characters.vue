@@ -1,7 +1,8 @@
 <template>
     <div id="characters_view">
-        <div class="loading" v-if="loading">Loading...</div>
-        <template v-else>
+
+        <loader :loading="loading" color="#28241C"></loader>
+        <template v-if="!loading">
             <ul v-if="characters.length" class="list-group">
                 <li v-for="character in characters">
                     <a href="#" @click.stop.prevent="toggleCurrentCharacter(character.url)">{{ character.name }}</a>
@@ -30,6 +31,7 @@
 </template>
 
 <script>
+  import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
   import { fetchCachedData } from '../utils'
 
   export default {
@@ -91,11 +93,18 @@
           Promise.all(promises).then(() => { this.currentCharId = url })
         }
       }
+    },
+    components: {
+      loader: PulseLoader
     }
   }
 </script>
 
 <style lang="less" scoped>
+ .v-spinner {
+     text-align: center;
+ }
+
  .character-traits {
      padding: .5em;
 
@@ -106,7 +115,7 @@
      dd {
          margin-left: .5em;
      }
-     
+
      dd, dt {
          display: inline;
      }
